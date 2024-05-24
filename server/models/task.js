@@ -7,8 +7,8 @@ const taskSchema = new mongoose.Schema({
   },
   description: String,
   dueDate: Date,
-  boardId: {
-    type: mongoose.Schema.Types.ObjectId,
+  boardName: {
+    type: String,
     ref: "Board",
     required: true,
   },

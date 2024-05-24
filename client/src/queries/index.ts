@@ -1,0 +1,1 @@
+export { useGetAllBoards } from "./useGetAllBoards";

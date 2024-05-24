@@ -18,7 +18,13 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "screens": ["./src/screens"],
+      "types": ["./src/types"],
+      "queries": ["./src/queries"],
+      "mutations": ["./src/mutations"],
+      "libs": ["./src/libs"],
+      "layouts": ["./src/layouts"],
+      "containers": ["./src/containers"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

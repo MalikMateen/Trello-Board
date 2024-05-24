@@ -19,7 +19,7 @@ router.post("/create", async (req, res) => {
 
 router.get("/getAll", async (req, res) => {
   try {
-    const boards = await Board.find();
+    const boards = await Board.find().populate("tasks");
     res.status(200).json(boards);
   } catch (err) {
     res.status(400).json({ error: err.message });

@@ -7,6 +7,7 @@ export enum NavigationPath {
 
 export enum QueryKey {
   GetAllBoards = "GetAllBoards",
+  GetAllTasks = "GetAllTasks",
 }
 
 export const BACKEND_URL = "http://localhost:3001";

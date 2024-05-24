@@ -18,13 +18,8 @@ export const useDeleteBoard = () => {
 
   return useMutation({
     mutationFn: mutationFn,
-    onSuccess: (deletedBoard: Board) => {
-      queryClient.setQueryData(
-        [QueryKey.GetAllBoards],
-        (allBoards: Board[]) => {
-          return allBoards.filter(({ name }) => deletedBoard.name !== name);
-        }
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllBoards] });
     },
   });
 };

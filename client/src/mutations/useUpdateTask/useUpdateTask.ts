@@ -1,19 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axios } from "libs";
-import { Board } from "types";
+import { Task } from "types";
 import { QueryKey } from "../../constants";
 
-export const useCreateBoard = () => {
+export const useUpdateTask = () => {
   const queryClient = useQueryClient();
 
-  const mutationFn = async ({
-    boardName,
-  }: {
-    boardName: string;
-  }): Promise<Board> => {
-    const { data } = await axios.post("/board/create", {
-      boardName,
-    });
+  const mutationFn = async (task: Task): Promise<Task> => {
+    const { data } = await axios.put("/task/update", task);
 
     return data;
   };
@@ -22,6 +16,7 @@ export const useCreateBoard = () => {
     mutationFn: mutationFn,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllBoards] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllTasks] });
     },
   });
 };

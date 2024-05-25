@@ -102,6 +102,7 @@ export const TaskForm = React.memo<TaskFormProps>(function TaskForm({
                 onChange={(e) => setTitle(e.target.value)}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                 placeholder="Task Title"
+                disabled={!!task}
                 required
               />
             </div>
@@ -150,7 +151,7 @@ export const TaskForm = React.memo<TaskFormProps>(function TaskForm({
             <div className="text-center">
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
               >
                 {`${task ? "Update" : "Create"}`}
               </button>

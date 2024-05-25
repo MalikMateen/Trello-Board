@@ -1,5 +1,6 @@
 "use client";
 import { TaskCard, TaskForm } from "containers";
+import { useUpdateBoard } from "mutations";
 import { useGetAllBoards } from "queries";
 import React, { useCallback, useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
@@ -12,6 +13,8 @@ export const TaskManagement = React.memo(function TaskManagement() {
 
   const { data: boards = [] } = useGetAllBoards();
 
+  const { mutateAsync: updateBoard } = useUpdateBoard();
+
   useEffect(() => {
     boards.length && setBoardList(boards);
   }, [boards]);
@@ -21,17 +24,53 @@ export const TaskManagement = React.memo(function TaskManagement() {
     toggleModal(true);
   }, []);
 
-  const onDragEnd = useCallback((result: any) => {
-    if (!result.destination) return;
+  const onDragEnd = useCallback(
+    async (result: any) => {
+      const { source, destination } = result;
 
-    const { source, destination } = result;
+      if (!destination) return;
 
-    console.log("source: ", source);
+      if (
+        source.droppableId === destination.droppableId &&
+        source.index === destination.index
+      ) {
+        return;
+      }
 
-    console.log("destination: ", destination);
+      const sourceBoardIndex = boardList.findIndex(
+        (board) => board.name === source.droppableId
+      );
+      const destinationBoardIndex = boardList.findIndex(
+        (board) => board.name === destination.droppableId
+      );
 
-    setBoardList([]);
-  }, []);
+      const updatedBoardList = [...boardList];
+
+      if (source.droppableId === destination.droppableId) {
+        const board = updatedBoardList[sourceBoardIndex];
+        const [removedTask] = board.tasks.splice(source.index, 1);
+        board.tasks.splice(destination.index, 0, removedTask);
+      } else {
+        const taskToMove =
+          updatedBoardList[sourceBoardIndex].tasks[source.index];
+        updatedBoardList[sourceBoardIndex].tasks.splice(source.index, 1);
+        updatedBoardList[destinationBoardIndex].tasks.splice(
+          destination.index,
+          0,
+          taskToMove
+        );
+
+        taskToMove.boardName = destination.droppableId;
+
+        await updateBoard({
+          sourceBoardName: source.droppableId,
+          destinationBoardName: destination.droppableId,
+          taskTitle: taskToMove.title,
+        });
+      }
+    },
+    [boardList, updateBoard]
+  );
 
   const onTaskEditClick = useCallback((task: Task) => {
     setSelectedTask(task);
